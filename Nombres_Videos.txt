@@ -1,0 +1,11 @@
+Facultad_1 = Ingenieria
+Programa_1 = Ing_Mecatronica
+Programa_2 = Ing_Mecanica
+Programa_3 = Ing_Electrica
+Programa_4 = Ing_Industrial
+
+Facultad_2 = Arquitectura
+Programa_1 =
+Programa_2 =
+Programa_3 =
+Programa_4 =
