@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+# -*-coding: utf8-*-
+from __future__ import print_function
+from PIL import Image
+from PIL import ImageTk
+import tkinter as tki
+import threading
+import datetime
+import imutils
+import cv2
+import os
+import dlib
+import time
+from imutils import face_utils
+from scipy.spatial import distance as dist
+import numpy as np
+from subprocess import call
+from tkinter import messagebox
+from ffpyplayer.player import MediaPlayer
+from imutils.video import FileVideoStream
+from moviepy.editor import *
+import pygame
+import easygui as eg
+import xlwt
+
+class Facial_detection:
+
+	def __init__(self,Video):
+
+
+		self.Video = Video
+		self.frame = None
+		self.thread = None
+		self.stopEvent = None
+		self.loop = False
+
+		self.Ventana = tki.Tk()
+		self.panel = None
+		self.Ventana.geometry('1400x800')
+		self.Ventana.configure(background='#C1BCFA')
+
+		self.Ear = tki.StringVar()
+		self.Mar = tki.StringVar()
+		self.Estado = tki.StringVar()
+		self.Facultad = tki.StringVar()
+		self.Tema = tki.StringVar()
+		self.Empieza = 0
+		self.next = 0
+
+		self.salir = 0
+
+		self.stopEvent = threading.Event()
+		self.thread = threading.Thread(target=self.videoLoop, args=())
+		self.thread.start()
+
+
+
+		self.Ventana.title("TESIS SISTEMA INTERACTIVO")
+		self.Ventana.protocol("WM_DELETE_WINDOW", self.Close)
+
+		self.Inge = tki.Button(self.Ventana, text="INGENIERIAS", font=("Noto Sans Mono CJK TC Bold","15"),
+			command=self.Ingeni, state='normal',borderwidth='10p')
+		self.Inge.place(x=930, y=400)
+
+		self.Arqui = tki.Button(self.Ventana, text="ARQUITECTURA", font=("Noto Sans Mono CJK TC Bold","15"),
+			command=self.Arquitec, state='normal',borderwidth='10p')
+		self.Arqui.place(x=1120, y=400)
+
+		self.SAL= tki.Button(self.Ventana, text="SALIR", font=("Noto Sans Mono CJK TC Bold","15"),
+			command=self.sal, state='normal',borderwidth='10p').place(x=1050, y=600)
+
+		self.NEXT= tki.Button(self.Ventana, text="SIGUIENTE", font=("Noto Sans Mono CJK TC Bold","15"),
+			command=self.siguiente, state='normal',borderwidth='10p')
+		self.NEXT.place(x=1030, y=500)
+
+		self.Titulo = tki.Label(self.Ventana, text="TESIS SISTEMA INTERACTIVO MEDIANTE VISION ARTIFICIAL\nPARA FINES DE PERCEPCION\nEnder Ortega",
+			font=("Noto Sans Mono CJK JP Bold","15"),relief="groove", borderwidth=8,background="#66ccff")
+		self.Titulo.place(x=300, y=3)
+
+
+		self.FAC1 = tki.Label(self.Ventana, text="Facultad: ",foreground="black",
+			font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.FAC1.place(x=1000,y=200)
+
+		self.TEM1 = tki.Label(self.Ventana, text="Tema:      ",foreground="black",
+			font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.TEM1.place(x=1000,y=240)
+
+		self.EARL1 = tki.Label(self.Ventana, text="Ojos:       ",foreground="black",
+			font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.EARL1.place(x=1000,y=320)
+
+		self.MARL1 = tki.Label(self.Ventana, text="Boca:       ",foreground="black",
+			font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.MARL1.place(x=1000,y=360)
+
+
+		self.FACT = tki.Label(self.Ventana, textvariable=self.Facultad,foreground="black",
+			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.FACT.place(x=1100,y=200)
+
+		self.TEM = tki.Label(self.Ventana, textvariable=self.Tema,foreground="black",
+			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.TEM.place(x=1100,y=240)
+
+		self.EARL = tki.Label(self.Ventana, textvariable=self.Ear,foreground="black",
+			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.EARL.place(x=1100,y=320)
+
+		self.MARL = tki.Label(self.Ventana, textvariable=self.Mar,foreground="black",
+			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
+		self.MARL.place(x=1100,y=360)
