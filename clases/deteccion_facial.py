@@ -450,7 +450,53 @@ class Facial_detection:
 						contp = 0
 						SumaE = 0
 
-				
+				#Boca cerrada
+				elif cont == 2:
+
+					contaux = -1
+					SumaE = SumaE + MARG
+					contp = contp + 1
+
+					contM += 1
+					contMAu +=1
+
+					if t_act >= 3:
+
+						promMarCe = round((SumaE / contp),4)
+						print("[INFO] Valor de Mouth Aspect Ratio (MAR) para boca cerrada: ",promMarCe)
+						cont = 3
+						contaux = 3
+						contp = 0
+						SumaE = 0
+
+				#Boca ABIERTA
+				elif cont == 3:
+
+					contaux = -1
+					SumaE = SumaE + MARG
+					contp = contp + 1
+					contMAu +=1
+
+					if t_act >= 3:
+
+						promMarAbi = round((SumaE / contp),4)
+						print("[INFO] Valor de Mouth Aspect Ratio (MAR) para boca abierta: ",promMarAbi)
+						cont = 4
+						contaux = 4
+						contp = 0
+						SumaE = 0
+						Umbral_ojos = round((((promEarAbi + promEarCe) / 2) - 0.05),4)
+						Umbral_boca = round(((promMarCe + promMarAbi) / 2) ,4)
+						print("\033[1;36m"+"[INFO] Umbrales establecidos..."+'\033[0;m')
+						print("[INFO] Valor Umbral para ojos: ",Umbral_ojos)
+						print("[INFO] Valor Umbral para boca: ",Umbral_boca)
+						print("\033[1;33m"+"[INFO] Calibracion finalizada..."+'\033[0;m')
+
+
+
+				if self.loop:
+					break
+			
 
 
 		except RuntimeError:
