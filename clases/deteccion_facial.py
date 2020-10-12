@@ -304,3 +304,11 @@ class Facial_detection:
 		mar = (A + B + C) / (3.0 * D)
 
 		return mar
+
+#####################################################################################################
+###################################################################################################
+	def Video_Path(self,Facul,Pro,Cap):
+
+		Path = "Facul_" + str(Facul) + "_Pro_" + str(Pro) + "_Cap_" + str(Cap) + ".mp4"
+		video_clase=cv2.VideoCapture(Path)
+		return video_clase
