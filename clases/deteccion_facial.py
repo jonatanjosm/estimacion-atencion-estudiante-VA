@@ -496,7 +496,35 @@ class Facial_detection:
 
 				if self.loop:
 					break
-			
+			self.Close()
+			self.t_global = time.monotonic() - self.t_global
+
+			Lista_tiempo.append(self.t_global)
+			Lista_boca.append(MARG)
+			Lista_ojos.append(EARG)
+			Lista_tema.append(self.Tema_lista)
+			Lista_estado.append(self.Estado_lista)
+			con_dist = 0;
+			for n in Lista_estado:
+				if n is "POCA ATENCIÓN":
+					con_dist += 1
+
+			t_distraccion = con_dist * 0.12
+
+
+			print("[INFO] Tiempo Total: ",self.t_global)
+			print("[INFO] Tiempo Distraido: ",t_distraccion)
+
+
+
+			porcentaje = (round(t_distraccion / self.t_global,4))*100
+			porce_2 = (round(((self.t_global - t_distraccion) / self.t_global),4))*100
+
+			print("[INFO] Porcentaje de distraccion: ",porcentaje,"%")
+			print("[INFO] Porcentaje de atencion: ",porce_2,"%")
+
+			self.Exportar(nombre, id, Lista_boca, Lista_ojos, Lista_tema, Lista_estado, Lista_tiempo, porcentaje, porce_2, promEarAbi, promEarCe, promMarCe, promMarAbi, Umbral_ojos, Umbral_boca,t_distraccion)
+
 
 
 		except RuntimeError:
