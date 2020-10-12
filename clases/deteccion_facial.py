@@ -113,6 +113,41 @@ class Facial_detection:
 
     #####################################################################################################
     ###################################################################################################
+	def Imprimir(self):
+		if self.Facul == 1:
+			self.Facultad_lista = "Ingenieria"
+			self.Facultad.set("INGENIERIAS")
+			if self.Pro == 1:
+				self.Tema_lista = "Mecatronica"
+				self.Tema.set("Mecatrónica")
+			elif self.Pro == 2:
+				self.Tema_lista = "Mecanica"
+				self.Tema.set("Mecanica")
+			elif self.Pro == 3:
+				self.Tema_lista = "Electronica"
+				self.Tema.set("Electrica")
+			elif self.Pro == 4:
+				self.Tema_lista = "Industrial"
+				self.Tema.set("Industrial")
+
+		elif self.Facul == 2:
+			self.Facultad_lista = "Arquitectura"
+			self.Facultad.set("ARQUITECTURA")
+			if self.Pro == 1:
+				self.Tema_lista = "Arquitectonica"
+				self.Tema.set("Arquitectonica")
+			elif self.Pro == 2:
+				self.Tema_lista = "Arq. Contemporanea"
+				self.Tema.set("Arq. Contemporanea")
+			elif self.Pro == 3:
+				self.Tema_lista = "Geometria"
+				self.Tema.set("Geometria")
+			elif self.Pro == 4:
+				self.Tema_lista = "Liberalismo"
+				self.Tema.set("Liberalismo")
+
+    #####################################################################################################
+    ###################################################################################################
 	def eye_aspect_ratio(self,eyeR,eyeL):
 
 		A = dist.euclidean(eyeR[1], eyeR[5])
