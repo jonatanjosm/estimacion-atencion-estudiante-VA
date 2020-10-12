@@ -132,3 +132,18 @@ class Facial_detection:
 		F = (D + E) / 2
 
 		return F
+
+    #####################################################################################################
+    ###################################################################################################
+
+	def mouth_aspect_ratio(self,mouth):
+
+		A = dist.euclidean(mouth[13], mouth[19])
+		B = dist.euclidean(mouth[14], mouth[18])
+		C = dist.euclidean(mouth[15], mouth[17])
+
+		D = dist.euclidean(mouth[12], mouth[16])
+
+		mar = (A + B + C) / (3.0 * D)
+
+		return mar
