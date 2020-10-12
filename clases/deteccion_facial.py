@@ -111,6 +111,116 @@ class Facial_detection:
 			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
 		self.MARL.place(x=1100,y=360)
 
+        def videoLoop(self):
+
+		try:
+
+			EARG = 0
+			MARG = 0
+
+			print("[INFO] Cargando paquete predictor...")
+			detector = dlib.get_frontal_face_detector()
+			predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+			time.sleep(1.0)
+
+			(lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+			(rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+			(mStart, mEnd) = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
+
+			#Variables auxiliares
+			cont = 0
+			contaux = 0
+			SumaE = 0
+			contp = 0
+			i = 0
+			contM = 0
+			contMAu = 0
+			conpat = 1
+
+			#Variables para tiempos
+			t_ojos_cerrados = 0
+			t_ini_ojos_cerrados = 0
+			con_t_ojos = 0
+			con_gene = 0
+
+			contador_general_distraccion = 0
+
+			t_boca_abierta = 0
+			t_ini_boca_abierta = 0
+			con_t_boca = 0
+
+			t_distraccion = 0
+			self.t_global = 0
+
+			self.Facul = 0
+			self.Pro = 0
+			#Variables para Video
+
+			Cont_video = 1
+
+			self.Estado.set("ESPERANDO...")
+			self.Facultad.set("ESPERANDO...")
+			self.Tema.set("ESPERANDO...")
+
+			nombre = eg.enterbox(msg='Ingrese su nombre COMPLETO:',
+                                title='Nombre del Usuario',
+                                strip=True,
+                                image=None)
+			id = eg.enterbox(msg='Ingrese su numero de Identificacion:',
+                                title='Identificacion del Usuario',
+                                strip=True,
+                                image=None)
+
+			Lista_tiempo = []
+			Lista_boca = []
+			Lista_ojos = []
+			Lista_tema = []
+			Lista_estado = []
+
+			self.Estado_lista = "CONCENTRADO"
+
+
+			#Bucle principal para la obtencion de datos
+			messagebox.showinfo('Aviso', 'Calibracion de valores...')
+			while not self.stopEvent.is_set() and self.salir ==  0:
+
+				self.Imprimir()
+
+				if contaux == 0:
+					print("\033[1;36m"+"[INFO] Calibrando data para ojos abiertos..."+'\033[0;m')
+					messagebox.showinfo('Aviso', 'Por favor, mantenga los ojos ABIERTOS durante 3 segundos')
+					t_inicial = time.monotonic()
+
+				elif contaux == 1:
+					print("\033[1;36m"+"[INFO] Calibrando data para ojos cerrados..."+'\033[0;m')
+					messagebox.showinfo('Aviso', 'Por favor, mantenga los ojos CERRADOS durante 3 segundos')
+					t_inicial = time.monotonic()
+
+				elif contaux == 2:
+					print("\033[1;36m"+"[INFO] Calibrando data para boca cerrada..."+'\033[0;m')
+					messagebox.showinfo('Aviso', 'Por favor, mantenga la boca CERRADA durante 3 segundos')
+					t_inicial = time.monotonic()
+
+				elif contaux == 3:
+					print("\033[1;36m"+"[INFO] Calibrando data para boca abierta..."+'\033[0;m')
+					messagebox.showinfo('Aviso', 'Por favor, mantenga la boca ABIERTA durante 3 segundos')
+					t_inicial = time.monotonic()
+
+				self.frame = self.Video.read()
+				self.frame = imutils.resize(self.frame, width=830)
+
+
+				gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
+				rects = detector(gray, 0)
+
+
+				
+
+
+		except RuntimeError:
+			print("\033[1;31m"+"[ERROR] Error en RunTime " +'\033[0;m')
+
 ######################################################################################################
 ##########################################################################################################
 	def Exportar(self, nombre, id, Lista_boca, Lista_ojos, Lista_tema, Lista_estado, Lista_tiempo, porcentaje, porce_2, promEarAbi, promEarCe, promMarCe, promMarAbi, Umbral_ojos, Umbral_boca,t_distraccion):
