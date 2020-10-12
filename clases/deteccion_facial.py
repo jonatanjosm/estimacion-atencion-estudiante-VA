@@ -113,6 +113,84 @@ class Facial_detection:
 
 ######################################################################################################
 ##########################################################################################################
+	def Exportar(self, nombre, id, Lista_boca, Lista_ojos, Lista_tema, Lista_estado, Lista_tiempo, porcentaje, porce_2, promEarAbi, promEarCe, promMarCe, promMarAbi, Umbral_ojos, Umbral_boca,t_distraccion):
+
+		libro = xlwt.Workbook()
+		libro1 = libro.add_sheet("Prueba")
+
+
+		Ojos_ab = "Valor de Ojos ABIERTOS: "+ str(promEarAbi)
+		Ojos_ce = "Valor de Ojos CERRADOS: "+ str(promEarCe)
+
+		Boca_ab = "Valor de Boca ABIERTA: "+ str(promMarAbi)
+		Boca_ce = "Valor de Boca CERRADA: "+ str(promMarCe)
+
+		Umbral_o = "Umbral para OJOS: "+ str(Umbral_ojos)
+		Umbral_b = "Umbral para BOCA: "+ str(Umbral_boca)
+
+		Porcen_dis = "Porcentaje de DISTRACCION: "+str(porcentaje)+"%"
+		Porcen_aten = "Porcentaje de ATENCION: "+str(porce_2)+"%"
+
+		t_distraccion = round(t_distraccion,4)
+		self.t_global = round(self.t_global,4)
+
+		T_dist = "Tiempo de Distraccion: "+ str(t_distraccion) + "seg"
+		T_total = "Tiempo Total: "+ str(self.t_global) + "seg"
+
+		N = "Nombre: "+ nombre
+		I = "Identificacion: "+ id
+		F = "Facultad: "+ self.Facultad_lista
+
+		libro1.write(0,0,N)
+		libro1.write(1,0,I)
+		libro1.write(2,0,F)
+		libro1.write(3,0,Ojos_ab)
+		libro1.write(4,0,Ojos_ce)
+		libro1.write(5,0,Umbral_o)
+		libro1.write(6,0,Boca_ab)
+		libro1.write(7,0,Boca_ce)
+		libro1.write(8,0,Umbral_b)
+
+		libro1.write(9,0,T_total)
+		libro1.write(10,0,T_dist)
+		libro1.write(11,0,Porcen_dis)
+		libro1.write(12,0,Porcen_aten)
+
+		libro1.write(0,1,"TIEMPO (Segundos)")
+		libro1.write(0,2,"OJOS")
+		libro1.write(0,3,"BOCA")
+		libro1.write(0,4,"TEMA")
+		libro1.write(0,5,"ESTADO")
+
+		i=1
+		for n in Lista_tiempo:
+			libro1.write(i,1,n)
+			i += 1
+		i=1
+		for n in Lista_ojos:
+			libro1.write(i,2,n)
+			i += 1
+		i=1
+		for n in Lista_boca:
+			libro1.write(i,3,n)
+			i += 1
+		i=1
+		for n in Lista_tema:
+			libro1.write(i,4,n)
+			i += 1
+		i=1
+		for n in Lista_estado:
+			libro1.write(i,5,n)
+			i += 1
+
+		N2 = nombre.replace(" ","-")
+		Fecha = time.strftime("%d-%m-%y %H:%M:%S")
+		path = "Exportes/Exporte-" + N2 + " " + Fecha + ".xls"
+		print("[INFO] Exporte generado: "+path)
+		libro.save(path)
+
+######################################################################################################
+##########################################################################################################
 	def sal(self):
 		self.salir = 1
 ######################################################################################################
