@@ -110,3 +110,25 @@ class Facial_detection:
 		self.MARL = tki.Label(self.Ventana, textvariable=self.Mar,foreground="black",
 			background="white",font=("URW Bookman L","15"),relief="sunken", borderwidth=3)
 		self.MARL.place(x=1100,y=360)
+
+    #####################################################################################################
+    ###################################################################################################
+	def eye_aspect_ratio(self,eyeR,eyeL):
+
+		A = dist.euclidean(eyeR[1], eyeR[5])
+		B = dist.euclidean(eyeR[2], eyeR[4])
+
+		C = dist.euclidean(eyeR[0], eyeR[3])
+
+		D = (A + B) / (2.0 * C)
+
+		A = dist.euclidean(eyeL[1], eyeL[5])
+		B = dist.euclidean(eyeL[2], eyeL[4])
+
+		C = dist.euclidean(eyeL[0], eyeL[3])
+
+		E = (A + B) / (2.0 * C)
+
+		F = (D + E) / 2
+
+		return F
