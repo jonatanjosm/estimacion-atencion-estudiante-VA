@@ -395,6 +395,62 @@ class Facial_detection:
 						image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 						image = Image.fromarray(image)
 						image = ImageTk.PhotoImage(image)
+#######################################################################################################
+				else:
+					for (x, y) in shape:
+						cv2.circle(self.frame, (x, y), 1, (0, 0, 255), -1)
+
+					image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+					image = Image.fromarray(image)
+					image = ImageTk.PhotoImage(image)
+
+
+				if self.panel is None:
+					self.panel = tki.Label(image=image,relief="sunken", borderwidth=3)
+					self.panel.image = image
+					self.panel.place(x=80, y=115)
+
+				else:
+					self.panel.configure(image=image,relief="sunken", borderwidth=3)
+					self.panel.image = image
+
+				t_act = time.monotonic() - t_inicial
+#########################################################################################################
+				#Etapa inicial para determinar los valores para ojos y boca
+				#Ojos Abiertos
+				if cont == 0:
+
+					contaux = -1
+					SumaE = SumaE + EARG
+					contp = contp + 1
+
+
+					if t_act >= 3:
+
+						promEarAbi = SumaE / contp
+						print("[INFO] Valor de Eye Aspect Ratio (EAR) para ojos abiertos: ",promEarAbi)
+						cont = 1
+						contaux = 1
+						contp = 0
+						SumaE = 0
+
+				#Ojos Cerrados
+				elif cont == 1:
+
+					contaux = -1
+					SumaE = SumaE + EARG
+					contp = contp + 1
+
+					if t_act >= 3:
+
+						promEarCe = SumaE / contp
+						print("[INFO] Valor de Eye Aspect Ratio (EAR) para ojos cerrados: ",promEarCe)
+						cont = 2
+						contaux = 2
+						contp = 0
+						SumaE = 0
+
+				
 
 
 		except RuntimeError:
