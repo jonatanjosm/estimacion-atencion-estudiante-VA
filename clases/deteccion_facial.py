@@ -317,7 +317,84 @@ class Facial_detection:
 					Lista_tema.append(self.Tema_lista)
 					Lista_estado.append(self.Estado_lista)
 
-					
+					###########################################################
+					###########################################################
+					if self.next==1:
+						self.next = 0
+						self.Estado_lista = "CAMBIO DE TEMA"
+
+						t_actual_lista = round((time.monotonic() - self.t_global),4)
+
+						Lista_tiempo.append(t_actual_lista)
+						Lista_boca.append(MARG)
+						Lista_ojos.append(EARG)
+						Lista_tema.append(self.Tema_lista)
+						Lista_estado.append(self.Estado_lista)
+
+
+						if Cont_video < 4:
+							self.Pro+=1
+							Cap = 1
+							self.video_clase.release()
+							self.video_clase = self.Video_Path(self.Facul, self.Pro, Cap)
+							grabbed, frame=self.video_clase.read()
+							frame = imutils.resize(frame, width=950)
+							contador_general_distraccion = 0
+							Cont_video+=1
+						else:
+							messagebox.showinfo('Aviso', 'Fin de la sesion.')
+							break;
+
+					if contador_general_distraccion >= 7:
+						self.Estado_lista = "UMBRAL DISTRACCIONES SUPERADO"
+						Op = messagebox.askyesno("Aviso!","Se detecto poco interes, ¿Desea cambiar de tema?")
+						if Op:
+							if Cont_video < 4:
+								self.Pro+=1
+								Cap = 1
+								self.video_clase.release()
+								self.video_clase = self.Video_Path(self.Facul, self.Pro, Cap)
+								grabbed, frame=self.video_clase.read()
+								frame = imutils.resize(frame, width=950)
+								contador_general_distraccion = 0
+								Cont_video+=1
+							else:
+								messagebox.showinfo('Aviso', 'Fin de la sesion.')
+								break;
+
+						else:
+							contador_general_distraccion = 0
+
+
+
+					grabbed, frame=self.video_clase.read()
+					self.panel.place(x=10, y=10)
+					frame = imutils.resize(frame, width=950)
+					if not grabbed:
+
+						if Cont_video < 4:
+							if contador_general_distraccion >= 4:
+								self.Pro+=1
+								Cap = 1
+							else:
+								Cap+=1
+
+							self.video_clase.release()
+							self.video_clase = self.Video_Path(self.Facul, self.Pro, Cap)
+							grabbed, frame=self.video_clase.read()
+							frame = imutils.resize(frame, width=830)
+							contador_general_distraccion = 0
+							Cont_video+=1
+						else:
+							messagebox.showinfo('Aviso', 'Fin de la sesion.')
+							break;
+
+					else:
+
+						#image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+						image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+						image = Image.fromarray(image)
+						image = ImageTk.PhotoImage(image)
 
 
 		except RuntimeError:
