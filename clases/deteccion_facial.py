@@ -215,7 +215,109 @@ class Facial_detection:
 				rects = detector(gray, 0)
 
 
-				
+				for rect in rects:
+
+					shape = predictor(gray, rect)
+					shape = face_utils.shape_to_np(shape)
+
+					leftEye = shape[lStart:lEnd]
+					rightEye = shape[rStart:rEnd]
+
+					Mouth = shape[mStart:mEnd]
+
+					EARG = round(self.eye_aspect_ratio(rightEye, leftEye),4)
+					MARG = round(self.mouth_aspect_ratio(Mouth),4)
+
+					if self.Empieza < 1:
+
+						self.Ear.set(str(round(EARG,3)))
+						self.Mar.set(str(round(MARG,3)))
+					else:
+						self.Ear.set("")
+						self.Mar.set("")
+
+################################################################################################
+				if cont == 4 and self.Empieza == 1:
+					if con_gene == 0:
+						self.t_global = time.monotonic()
+						con_gene = 1
+
+					self.Inge.place_forget()
+
+					self.Arqui.place_forget()
+					self.EARL.place_forget()
+					self.EARL1.place_forget()
+					self.MARL.place_forget()
+					self.MARL1.place_forget()
+					self.Titulo.place_forget()
+
+					##############################################
+					##############################################
+					if EARG <= Umbral_ojos or MARG >= Umbral_boca:
+
+						self.Estado_lista = "POCA ATENCIÓN"
+						t_boca_abierta = time.monotonic() - t_ini_boca_abierta
+						t_ojos_cerrados = time.monotonic() - t_ini_ojos_cerrados
+
+
+						if t_boca_abierta >= t_ojos_cerrados:
+							t_distraccion = t_boca_abierta
+						else:
+							t_distraccion = t_ojos_cerrados
+
+					else:
+						self.Estado_lista = "CONCENTRADO"
+					##############################################
+					##############################################
+
+					if EARG <= Umbral_ojos and con_t_ojos == 0:
+
+						t_ini_ojos_cerrados = time.monotonic()
+						con_t_ojos = 1
+
+						#if (time.monotonic() - t_ini_ojos_cerrados) >=2:
+					#		self.Estado_lista = "POCA ATENCIÓN"
+
+					elif EARG > Umbral_ojos and con_t_ojos == 1:
+						t_ojos_cerrados = time.monotonic() - t_ini_ojos_cerrados
+
+						con_t_ojos = 0
+
+						if t_ojos_cerrados >= 3:
+
+							contador_general_distraccion += 1
+							#self.Estado_lista = "CONCENTRADO"
+						t_ojos_cerrados = 0;
+
+					if MARG >= Umbral_boca and con_t_boca == 0:
+
+						t_ini_boca_abierta = time.monotonic()
+						con_t_boca = 1
+
+						#if time.monotonic() - t_ini_boca_abierta >=2:
+						#	self.Estado_lista = "POCA ATENCIÓN"
+
+					elif MARG < Umbral_boca and con_t_boca == 1:
+
+						t_boca_abierta = time.monotonic() - t_ini_boca_abierta
+						con_t_boca = 0
+
+						if t_boca_abierta > 3:
+							t_distraccion = t_distraccion + t_boca_abierta
+							contador_general_distraccion += 1
+							#self.Estado_lista = "CONCENTRADO"
+
+					#########################################################
+					self.Imprimir()
+					t_actual_lista = round((time.monotonic() - self.t_global),4)
+
+					Lista_tiempo.append(t_actual_lista)
+					Lista_boca.append(MARG)
+					Lista_ojos.append(EARG)
+					Lista_tema.append(self.Tema_lista)
+					Lista_estado.append(self.Estado_lista)
+
+					
 
 
 		except RuntimeError:
